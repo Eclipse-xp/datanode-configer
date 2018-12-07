@@ -25,7 +25,7 @@ func main() {
 	//启动容器
 	router.POST("/container/:containerId", nil)
 	//停止容器
-	router.DELETE("/container/:containerId", nil)
+	router.DELETE("/container/:containerId", handler.StopContainer)
 
 	http.ListenAndServe(":8080", router)
 }

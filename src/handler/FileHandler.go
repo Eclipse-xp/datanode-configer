@@ -1,3 +1,4 @@
+//配置文件处理器
 package handler
 
 import (
@@ -8,8 +9,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 )
-
-//配置文件处理器
 
 var fileMap map[string]string
 
