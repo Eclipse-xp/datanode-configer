@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/julienschmidt/httprouter"
-	"net/http"
 	"./handler"
 	_ "./constants"
+	"net/http"
 )
 
 func main() {
@@ -27,8 +27,10 @@ func main() {
 	//停止容器
 	router.DELETE("/container/:containerId", handler.StopContainer)
 
-	//通过docker-compose启动服务
-	router.POST("/compose/:fileId", handler.StopContainer)
+	//通过docker-compose up启动服务
+	router.POST("/compose/:fileId", handler.ComposeHandler)
+	//通过docker-compose pull更新镜像
+	router.GET("/compose/:fileId", handler.ComposeHandler)
 
 	http.ListenAndServe(":8080", router)
 }
