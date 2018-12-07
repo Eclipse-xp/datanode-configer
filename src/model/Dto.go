@@ -14,28 +14,28 @@ type DtoGenerator struct {}
 
 func (dg DtoGenerator) Success() RespDto {
 	res := RespDto{}
-	res.Code = 0
+	res.Code = RESP_CODE_SUCCESS
 	res.Message = "Success"
 	return res
 }
 
 func (dg DtoGenerator) SuccessWithData(data interface{}) RespDto {
 	res := RespDto{Data: data}
-	res.Code = 0
+	res.Code = RESP_CODE_SUCCESS
 	res.Message = "Success"
 	return res
 }
 
 func (dg DtoGenerator) Fail() RespDto {
 	res := RespDto{}
-	res.Code = 1
+	res.Code = RESP_CODE_FAIL
 	res.Message = "Failed"
 	return res
 }
 
 func (dg DtoGenerator) FailWithContent(code int, message string) RespDto {
 	res := RespDto{}
-	res.Code = 1
+	res.Code = RESP_CODE_FAIL
 	res.Message = message
 	return res
 }

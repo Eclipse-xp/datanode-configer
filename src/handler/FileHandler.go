@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"github.com/julienschmidt/httprouter"
 	"fmt"
-	"model"
+	"../model"
 	"encoding/json"
 	"io/ioutil"
 )
@@ -29,7 +29,7 @@ func ConfigInfoHandler(w http.ResponseWriter, r *http.Request, p httprouter.Para
 		//序列化并返回
 		json.NewEncoder(w).Encode(resp)
 	} else {
-		resp := model.DtoGenerator{}.FailWithContent(0, "不支持操作该文件")
+		resp := model.DtoGenerator{}.FailWithContent(model.RESP_CODE_FAIL, "不支持操作该文件")
 		json.NewEncoder(w).Encode(resp)
 	}
 }

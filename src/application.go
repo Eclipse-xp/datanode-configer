@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/julienschmidt/httprouter"
 	"net/http"
-	"handler"
-	_ "handler"
+	"./handler"
+	_ "./handler"
 )
 
 func main() {
@@ -19,7 +19,7 @@ func main() {
 	//更新镜像
 	router.POST("/image", nil)
 	//获取容器列表
-	router.GET("/container", nil)
+	router.GET("/container", handler.Containers)
 	//查看容器具体信息
 	router.GET("/container/:containerId", nil)
 	//启动容器
