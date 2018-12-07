@@ -10,6 +10,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"encoding/json"
 	"../model"
+	. "../constants"
 )
 //docker ps
 func Containers(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
@@ -17,7 +18,7 @@ func Containers(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	cli := getDockerClient(w)
 	containers, err := cli.ContainerList(context.Background(), types.ContainerListOptions{})
 	if err != nil {
-		resp := model.DtoGenerator{}.FailWithContent(model.RESP_CODE_FAIL, err.Error())
+		resp := model.DtoGenerator{}.FailWithContent(RESP_CODE_FAIL, err.Error())
 		json.NewEncoder(w).Encode(resp)
 	}
 	//拼装返回结果
@@ -36,7 +37,7 @@ func StopContainer(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 	err := cli.ContainerStop(context.Background(), p.ByName("containerId"), nil)
 	if err != nil {
 		fmt.Println(err)
-		resp := model.DtoGenerator{}.FailWithContent(model.RESP_CODE_FAIL, err.Error())
+		resp := model.DtoGenerator{}.FailWithContent(RESP_CODE_FAIL, err.Error())
 		json.NewEncoder(w).Encode(resp)
 	}
 	resp := model.DtoGenerator{}.Success()
@@ -44,9 +45,9 @@ func StopContainer(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 }
 
 func getDockerClient(w http.ResponseWriter) (*client.Client){
-	cli, err := client.NewClientWithOpts(client.WithVersion(model.DOCKER_CLIENT_VERSION))
+	cli, err := client.NewClientWithOpts(client.WithVersion(DOCKER_CLIENT_VERSION))
 	if err != nil {
-		resp := model.DtoGenerator{}.FailWithContent(model.RESP_CODE_FAIL, err.Error())
+		resp := model.DtoGenerator{}.FailWithContent(RESP_CODE_FAIL, err.Error())
 		json.NewEncoder(w).Encode(resp)
 	}
 	return cli

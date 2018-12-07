@@ -1,7 +1,0 @@
-package model
-
-const (
-	DOCKER_CLIENT_VERSION = "1.39"
-	RESP_CODE_SUCCESS = 0
-	RESP_CODE_FAIL = 1
-)

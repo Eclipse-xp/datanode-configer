@@ -8,13 +8,17 @@ import (
 	"../model"
 	"encoding/json"
 	"io/ioutil"
+	. "../constants"
+	"../safe"
 )
 
-var fileMap map[string]string
+var (
+	cfgKnight = safe.CfgKnight{}
+)
 
 func ConfigInfoHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	fileId := p.ByName("fileId")
-	if filePath := fileMap[fileId]; filePath != "" {
+	if filePath, ok := cfgKnight.CheckCfgWhiteList(fileId); ok {
 		//读文件
 		buf, err := ioutil.ReadFile(filePath)
 		if err != nil {
@@ -28,14 +32,7 @@ func ConfigInfoHandler(w http.ResponseWriter, r *http.Request, p httprouter.Para
 		//序列化并返回
 		json.NewEncoder(w).Encode(resp)
 	} else {
-		resp := model.DtoGenerator{}.FailWithContent(model.RESP_CODE_FAIL, "不支持操作该文件")
+		resp := model.DtoGenerator{}.FailWithContent(RESP_CODE_FAIL, "不支持操作该文件")
 		json.NewEncoder(w).Encode(resp)
-	}
-}
-
-func init() {
-	fileMap = map[string]string{
-		"appconfig": "/data/datanode/appconfig.properties",
-		"bundle-compose": "/data/datanode/compose/bundle/docker-compose.yml",
 	}
 }

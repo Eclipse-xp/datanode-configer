@@ -4,7 +4,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"./handler"
-	_ "./handler"
+	_ "./constants"
 )
 
 func main() {
@@ -26,6 +26,9 @@ func main() {
 	router.POST("/container/:containerId", nil)
 	//停止容器
 	router.DELETE("/container/:containerId", handler.StopContainer)
+
+	//通过docker-compose启动服务
+	router.POST("/compose/:fileId", handler.StopContainer)
 
 	http.ListenAndServe(":8080", router)
 }

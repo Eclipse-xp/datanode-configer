@@ -1,5 +1,7 @@
 package model
 
+import . "../constants"
+
 type BaseDto struct {
 	Code    int
 	Message string
