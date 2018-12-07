@@ -17,23 +17,26 @@ var cmdKnight = safe.CmdKnight{}
 //docker-compose 通过系统命令行方式执行
 func ComposeHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	var resp interface{}
-	var cmdLine string
+	var cmdLine *exec.Cmd
 	fileId := p.ByName("fileId")
 	if filePath, ok := cfgKnight.CheckCfgWhiteList(fileId); ok {
-		var cmdPre string
+		var cmdMix string
 		//选择命令行
 		switch r.Method {
 		case http.MethodGet:
-			cmdPre, _ = cmdKnight.CheckCmdWhiteList("dc-pl")
+			cmdMix, _ = cmdKnight.CheckCmdWhiteList("dc-pl")
+			cmds := strings.Split(cmdMix, " ")
+			cmdLine = exec.Command(cmds[0], cmds[1], filePath, cmds[3])
 			break
 		case http.MethodPost:
-			cmdPre, _ = cmdKnight.CheckCmdWhiteList("dc-u")
+			cmdMix, _ = cmdKnight.CheckCmdWhiteList("dc-u")
+			cmds := strings.Split(cmdMix, " ")
+			cmdLine = exec.Command(cmds[0], cmds[1], filePath, cmds[3], cmds[4])
 			break
 		}
 		//执行命令行，并获取返回结果
-		cmdLine = strings.Replace(cmdPre, "?", filePath, 1)
-		if cmdLine != "" {
-			outputs, err := exec.Command(cmdLine).Output()
+		if cmdLine != nil {
+			outputs, err := cmdLine.CombinedOutput()
 			resp = model.DtoGenerator{}.SuccessWithData(string(outputs))
 			if err != nil {
 				resp = model.DtoGenerator{}.FailWithContent(RespCodeFail, err.Error())
