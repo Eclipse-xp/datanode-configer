@@ -14,7 +14,7 @@ func main() {
 	//查看配置文件信息
 	router.GET("/config/:fileId", handler.ConfigInfoHandler)
 	//修改配置文件内容
-	router.POST("/config/:fileId", nil)
+	router.POST("/config/:fileId", handler.ConfigUpdate)
 
 	//获取镜像列表
 	router.GET("/image", handler.ListImages)

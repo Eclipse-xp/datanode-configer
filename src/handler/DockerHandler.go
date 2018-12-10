@@ -24,12 +24,12 @@ func Containers(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	if err != nil {
 		resp := model.DtoGenerator{}.FailWithContent(RespCodeFail, err.Error())
 		json.NewEncoder(w).Encode(resp)
+		return
 	}
 	//拼装返回结果
 	resp := model.DtoGenerator{}.SuccessWithData(containers)
 	//序列化并返回
 	json.NewEncoder(w).Encode(resp)
-
 	for _, container := range containers {
 		fmt.Printf("%s %s %s\n", container.Names, container.ID[:10], container.Image)
 	}
@@ -48,10 +48,12 @@ func RunContainer(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	if err != nil {
 		resp := model.DtoGenerator{}.FailWithContent(RespCodeFail, err.Error())
 		json.NewEncoder(w).Encode(resp)
+		return
 	}
 	if err := cli.ContainerStart(ctx, createResp.ID, types.ContainerStartOptions{}); err != nil {
 		resp := model.DtoGenerator{}.FailWithContent(RespCodeFail, err.Error())
 		json.NewEncoder(w).Encode(resp)
+		return
 	}
 	resp := model.DtoGenerator{}.SuccessWithData(createResp.ID)
 	json.NewEncoder(w).Encode(resp)
@@ -66,6 +68,7 @@ func StopContainer(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 		fmt.Println(err)
 		resp := model.DtoGenerator{}.FailWithContent(RespCodeFail, err.Error())
 		json.NewEncoder(w).Encode(resp)
+		return
 	}
 	resp := model.DtoGenerator{}.Success()
 	json.NewEncoder(w).Encode(resp)
@@ -79,6 +82,7 @@ func ListImages(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		fmt.Println(err)
 		resp := model.DtoGenerator{}.FailWithContent(RespCodeFail, err.Error())
 		json.NewEncoder(w).Encode(resp)
+		return
 	}
 	resp := model.DtoGenerator{}.SuccessWithData(images)
 	json.NewEncoder(w).Encode(resp)
@@ -95,6 +99,7 @@ func PullImage(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		fmt.Println(err)
 		resp := model.DtoGenerator{}.FailWithContent(RespCodeFail, err.Error())
 		json.NewEncoder(w).Encode(resp)
+		return
 	}
 	authStr := base64.URLEncoding.EncodeToString(encodedJSON)
 	//拉取镜像
@@ -104,6 +109,7 @@ func PullImage(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		fmt.Println(err)
 		resp := model.DtoGenerator{}.FailWithContent(RespCodeFail, err.Error())
 		json.NewEncoder(w).Encode(resp)
+		return
 	}
 	defer out.Close()
 	result, _ := ioutil.ReadAll(out)

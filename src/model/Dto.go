@@ -29,6 +29,11 @@ type ImagePullReqDto struct {
 	AuthConfig types.AuthConfig
 }
 
+//更新文件 req dto
+type ConfigUpdateReqDto struct {
+	Content string
+}
+
 type DtoGenerator struct {}
 
 func (dg DtoGenerator) Success() RespDto {
