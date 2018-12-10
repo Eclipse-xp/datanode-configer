@@ -69,6 +69,19 @@ func StopContainer(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 	json.NewEncoder(w).Encode(resp)
 }
 
+//docker images
+func ListImages(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	cli := getDockerClient(w)
+	images, err := cli.ImageList(context.Background(), types.ImageListOptions{})
+	if err != nil {
+		fmt.Println(err)
+		resp := model.DtoGenerator{}.FailWithContent(RespCodeFail, err.Error())
+		json.NewEncoder(w).Encode(resp)
+	}
+	resp := model.DtoGenerator{}.SuccessWithData(images)
+	json.NewEncoder(w).Encode(resp)
+}
+
 func getDockerClient(w http.ResponseWriter) (*client.Client) {
 	cli, err := client.NewClientWithOpts(client.WithVersion(DockerClientVersion))
 	if err != nil {

@@ -6,7 +6,7 @@ import (
 	_ "./constants"
 	"net/http"
 )
-
+//FIXME content_type 过滤？
 func main() {
 	router := httprouter.New()
 	//获取配置文件列表（这里可考虑将用数据库存储列表）
@@ -17,7 +17,7 @@ func main() {
 	router.POST("/config/:fileId", nil)
 
 	//获取镜像列表
-	router.GET("/image", nil)
+	router.GET("/image", handler.ListImages)
 	//拉取镜像pull image
 	router.GET("/image/:name/:tag", nil)
 	//启动容器docker run
