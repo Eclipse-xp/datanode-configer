@@ -12,6 +12,8 @@ import (
 	"../model"
 	. "../constants"
 	"github.com/docker/docker/api/types/container"
+	"io/ioutil"
+	"encoding/base64"
 )
 
 //docker ps
@@ -79,6 +81,33 @@ func ListImages(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		json.NewEncoder(w).Encode(resp)
 	}
 	resp := model.DtoGenerator{}.SuccessWithData(images)
+	json.NewEncoder(w).Encode(resp)
+}
+
+//docker pull FIXME 用户名密码加密处理
+func PullImage(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	cli := getDockerClient(w)
+	//获取用户名密码 并encode
+	var imagePullReqDto model.ImagePullReqDto
+	json.NewDecoder(r.Body).Decode(&imagePullReqDto)
+	encodedJSON, err := json.Marshal(imagePullReqDto.AuthConfig)
+	if err != nil {
+		fmt.Println(err)
+		resp := model.DtoGenerator{}.FailWithContent(RespCodeFail, err.Error())
+		json.NewEncoder(w).Encode(resp)
+	}
+	authStr := base64.URLEncoding.EncodeToString(encodedJSON)
+	//拉取镜像
+	out, err := cli.ImagePull(context.Background(), DockerRepo + p.ByName("name") + ":" + p.ByName("tag"),
+		types.ImagePullOptions{RegistryAuth: authStr})
+	if err != nil {
+		fmt.Println(err)
+		resp := model.DtoGenerator{}.FailWithContent(RespCodeFail, err.Error())
+		json.NewEncoder(w).Encode(resp)
+	}
+	defer out.Close()
+	result, _ := ioutil.ReadAll(out)
+	resp := model.DtoGenerator{}.SuccessWithData(string(result))
 	json.NewEncoder(w).Encode(resp)
 }
 

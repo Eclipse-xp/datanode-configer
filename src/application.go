@@ -19,7 +19,7 @@ func main() {
 	//获取镜像列表
 	router.GET("/image", handler.ListImages)
 	//拉取镜像pull image
-	router.GET("/image/:name/:tag", nil)
+	router.PUT("/image/:name/:tag", handler.PullImage)
 	//启动容器docker run
 	router.POST("/image/:name/:tag", handler.RunContainer)
 	//删除镜像rmi

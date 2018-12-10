@@ -4,6 +4,7 @@ import (
 	. "../constants"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/network"
+	"github.com/docker/docker/api/types"
 )
 
 type BaseDto struct {
@@ -16,11 +17,16 @@ type RespDto struct {
 	Data interface{}
 }
 
-//启动容器dto
+//启动容器 req dto
 type ContainerRunReqDto struct {
 	ContainerName string
 	HostConfig container.HostConfig
 	NetWorkingConfig network.NetworkingConfig
+}
+
+//pull image req dto
+type ImagePullReqDto struct {
+	AuthConfig types.AuthConfig
 }
 
 type DtoGenerator struct {}
