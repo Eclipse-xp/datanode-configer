@@ -19,26 +19,26 @@ func main() {
 	//获取镜像列表
 	router.GET("/image", nil)
 	//拉取镜像pull image
-	router.GET("/image/:repo/:tag", nil)
+	router.GET("/image/:name/:tag", nil)
 	//启动容器docker run
-	router.POST("/image/:repo/:tag", nil)
+	router.POST("/image/:name/:tag", handler.RunContainer)
 	//删除镜像rmi
-	router.DELETE("/image/:repo/:tag", nil)
+	router.DELETE("/image/:name/:tag", nil)
 	//获取容器列表
 	router.GET("/container", handler.Containers)
 	//查看容器具体信息
 	router.GET("/container/:containerId", nil)
 	//停止容器stop
-	router.POST("/container/:containerId", nil)
+	router.POST("/container/:containerId", handler.StopContainer)
 	//删除容器rm
-	router.DELETE("/container/:containerId", handler.StopContainer)
+	router.DELETE("/container/:containerId", nil)
 
 	//通过docker-compose up启动服务
 	router.POST("/compose/:fileId", handler.ComposeHandler)
 	//通过docker-compose pull更新镜像
 	router.GET("/compose/:fileId", handler.ComposeHandler)
 	//通过docker-compose down停止服务
-	router.DELETE("/compose/:fileId", handler.ComposeHandler)
+	//router.DELETE("/compose/:fileId", handler.ComposeHandler)
 
 	http.ListenAndServe(":8080", router)
 }

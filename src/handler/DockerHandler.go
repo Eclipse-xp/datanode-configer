@@ -11,7 +11,10 @@ import (
 	"encoding/json"
 	"../model"
 	. "../constants"
+	"github.com/docker/docker/api/types/container"
+	"io/ioutil"
 )
+
 //docker ps
 func Containers(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	//获取运行中的容器
@@ -31,6 +34,30 @@ func Containers(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	}
 }
 
+//docker run
+func RunContainer(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	cli := getDockerClient(w)
+	ctx := context.Background()
+	//TODO 接收数据改为用对象接收
+	var containerConfig model.ContainerRunReqDto
+	body, _ := ioutil.ReadAll(r.Body)
+	json.Unmarshal(body, &containerConfig)
+	createResp, err := cli.ContainerCreate(ctx, &container.Config{
+		Image: DockerRepo + p.ByName("name") + ":" + p.ByName("tag"),
+	}, &containerConfig.HostConfig, &containerConfig.NetWorkingConfig, containerConfig.ContainerName)
+	if err != nil {
+		resp := model.DtoGenerator{}.FailWithContent(RespCodeFail, err.Error())
+		json.NewEncoder(w).Encode(resp)
+	}
+	if err := cli.ContainerStart(ctx, createResp.ID, types.ContainerStartOptions{}); err != nil {
+		resp := model.DtoGenerator{}.FailWithContent(RespCodeFail, err.Error())
+		json.NewEncoder(w).Encode(resp)
+	}
+	resp := model.DtoGenerator{}.SuccessWithData(createResp.ID)
+	json.NewEncoder(w).Encode(resp)
+	fmt.Println(createResp.ID)
+}
+
 //docker stop
 func StopContainer(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	cli := getDockerClient(w)
@@ -44,7 +71,7 @@ func StopContainer(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 	json.NewEncoder(w).Encode(resp)
 }
 
-func getDockerClient(w http.ResponseWriter) (*client.Client){
+func getDockerClient(w http.ResponseWriter) (*client.Client) {
 	cli, err := client.NewClientWithOpts(client.WithVersion(DockerClientVersion))
 	if err != nil {
 		resp := model.DtoGenerator{}.FailWithContent(RespCodeFail, err.Error())

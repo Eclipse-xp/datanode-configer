@@ -4,6 +4,9 @@ const (
 	DockerClientVersion = "1.39"
 	RespCodeSuccess     = 0
 	RespCodeFail        = 1
+
+	//docker repo
+	DockerRepo = "registry.cn-shanghai.aliyuncs.com/lifecodeai/"
 )
 
 var (

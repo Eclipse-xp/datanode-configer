@@ -1,6 +1,10 @@
 package model
 
-import . "../constants"
+import (
+	. "../constants"
+	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/network"
+)
 
 type BaseDto struct {
 	Code    int
@@ -10,6 +14,13 @@ type BaseDto struct {
 type RespDto struct {
 	BaseDto
 	Data interface{}
+}
+
+//启动容器dto
+type ContainerRunReqDto struct {
+	ContainerName string
+	HostConfig container.HostConfig
+	NetWorkingConfig network.NetworkingConfig
 }
 
 type DtoGenerator struct {}
