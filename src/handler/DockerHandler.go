@@ -39,8 +39,6 @@ func RunContainer(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	ctx := context.Background()
 	//TODO 接收数据改为用对象接收
 	var containerConfig model.ContainerRunReqDto
-	//body, _ := ioutil.ReadAll(r.Body)
-	//json.Unmarshal(body, &containerConfig)
 	json.NewDecoder(r.Body).Decode(&containerConfig)
 	createResp, err := cli.ContainerCreate(ctx, &container.Config{
 		Image: DockerRepo + p.ByName("name") + ":" + p.ByName("tag"),
