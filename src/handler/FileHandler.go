@@ -16,6 +16,11 @@ var (
 	cfgKnight = safe.CfgKnight{}
 )
 
+func ConfigList(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	resp := model.DtoGenerator{}.SuccessWithData(CfgWhiteList)
+	json.NewEncoder(w).Encode(resp)
+}
+
 func ConfigInfoHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	fileId := p.ByName("fileId")
 	if filePath, ok := cfgKnight.CheckCfgWhiteList(fileId); ok {

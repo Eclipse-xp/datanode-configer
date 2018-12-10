@@ -9,8 +9,8 @@ import (
 //FIXME content_type 过滤？
 func main() {
 	router := httprouter.New()
-	//获取配置文件列表（这里可考虑将用数据库存储列表）
-	router.GET("/config", nil)
+	//获取配置文件列表（TODO 这里可考虑将用数据库存储列表）
+	router.GET("/config", handler.ConfigList)
 	//查看配置文件信息
 	router.GET("/config/:fileId", handler.ConfigInfoHandler)
 	//修改配置文件内容
