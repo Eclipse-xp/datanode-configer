@@ -23,7 +23,7 @@ func ComposeHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 		var cmdMix string
 		//选择命令行
 		switch r.Method {
-		case http.MethodGet:
+		case http.MethodPut:
 			cmdMix, _ = cmdKnight.CheckCmdWhiteList("dc-pl")
 			cmds := strings.Split(cmdMix, " ")
 			cmdLine = exec.Command(cmds[0], cmds[1], filePath, cmds[3])
@@ -33,6 +33,10 @@ func ComposeHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params)
 			cmds := strings.Split(cmdMix, " ")
 			cmdLine = exec.Command(cmds[0], cmds[1], filePath, cmds[3], cmds[4])
 			break
+		case http.MethodDelete:
+			cmdMix, _ = cmdKnight.CheckCmdWhiteList("dc-d")
+			cmds := strings.Split(cmdMix, " ")
+			cmdLine = exec.Command(cmds[0], cmds[1], filePath, cmds[3])
 		}
 		//执行命令行，并获取返回结果
 		if cmdLine != nil {

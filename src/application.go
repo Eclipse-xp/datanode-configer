@@ -36,9 +36,9 @@ func main() {
 	//通过docker-compose up启动服务
 	router.POST("/compose/:fileId", handler.ComposeHandler)
 	//通过docker-compose pull更新镜像
-	router.GET("/compose/:fileId", handler.ComposeHandler)
+	router.PUT("/compose/:fileId", handler.ComposeHandler)
 	//通过docker-compose down停止服务
-	//router.DELETE("/compose/:fileId", handler.ComposeHandler)
+	router.DELETE("/compose/:fileId", handler.ComposeHandler)
 
 	http.ListenAndServe(":8080", router)
 }

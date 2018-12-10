@@ -25,5 +25,6 @@ func init() {
 	CmdWitheList = map[string]string{
 		"dc-u":  "docker-compose -f ? up -d",
 		"dc-pl": "docker-compose -f ? pull",
+		"dc-d": "docker-compose -f ? down",
 	}
 }
