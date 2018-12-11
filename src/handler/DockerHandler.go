@@ -117,6 +117,20 @@ func PullImage(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	json.NewEncoder(w).Encode(resp)
 }
 
+//docker rmi
+func DeleteImage(w http.ResponseWriter, r *http.Request, p httprouter.Params)  {
+	cli := getDockerClient(w)
+	images, err := cli.ImageRemove(context.Background(), p.ByName("imageId"), types.ImageRemoveOptions{})
+	if err != nil {
+		fmt.Println(err)
+		resp := model.DtoGenerator{}.FailWithContent(RespCodeFail, err.Error())
+		json.NewEncoder(w).Encode(resp)
+		return
+	}
+	resp := model.DtoGenerator{}.SuccessWithData(images)
+	json.NewEncoder(w).Encode(resp)
+}
+
 func getDockerClient(w http.ResponseWriter) (*client.Client) {
 	cli, err := client.NewClientWithOpts(client.WithVersion(DockerClientVersion))
 	if err != nil {

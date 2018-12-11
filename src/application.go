@@ -23,7 +23,7 @@ func main() {
 	//启动容器docker run
 	router.POST("/image/:name/:tag", handler.RunContainer)
 	//删除镜像rmi
-	router.DELETE("/image/:name/:tag", nil)
+	router.DELETE("/image/:imageId", handler.DeleteImage)
 	//获取容器列表
 	router.GET("/container", handler.Containers)
 	//查看容器具体信息
